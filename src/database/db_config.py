@@ -1,7 +1,8 @@
+import os
+
 MYSQL_CONFIG = {
-    'host': 'localhost',
-    'port': 3306,
-    'user': 'root',
-    'password': 'Santino22',
-    'database': 'utn_project_db'
+    'host': os.environ.get("database_host"),
+    'user': os.environ.get("database_user"),
+    'password': os.environ.get("database_password"),
+    'database': os.environ.get("database"),
 }

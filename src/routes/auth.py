@@ -1,5 +1,5 @@
 from flask import render_template, Blueprint, flash, g, redirect, request, url_for, session
-from src.services.UserServices import register_user, select_user, get_user_by_id, verify_password
+from src.services.UserServices import register_user, select_user, get_user_by_id, verify_password,logged_user,login_required_user,logout_user
 import functools
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
@@ -61,26 +61,11 @@ def login():
 
 # Logged User
 @auth.before_app_request
-def logged_user():
-    user_id = session.get('user_id')
-    if user_id is None:
-        g.user = None
-    else:
-        g.user = get_user_by_id(user_id)
-
+def logged():
+    logged_user()
 
 # Logout
 @auth.route("/logout")
 def logout():
-    session.clear()
-    return redirect(url_for('index.indexf'))
+    return logout_user()
 
-
-# Login required
-def login_required(view):
-    @functools.wraps(view)
-    def wrapped_view(**kwargs):
-        if g.user is None:
-            return redirect(url_for('auth.login'))
-        return view(**kwargs)
-    return wrapped_view
