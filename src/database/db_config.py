@@ -1,4 +1,7 @@
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 MYSQL_CONFIG = {
     'host': os.environ.get("database_host"),
