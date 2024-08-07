@@ -11,3 +11,4 @@ psycopg2-binary==2.9.9
 pip==24.0
 setuptools==65.5.0
 Werkzeug==3.0.2
+python-dotenv==1.0.1
