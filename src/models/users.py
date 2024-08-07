@@ -1,10 +1,11 @@
-from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy import Column, Integer, String
+from src.database.connection import Base
 
-class User:
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String(25))
+    surname = Column(String(25))
+    username = Column(String(25), unique=True)
+    password = Column(String(300))
 
-    def __init__(self,id,name,surname,username,password):
-        self.id = id
-        self.name = name
-        self.surname = surname
-        self.username = username
-        self.password = password

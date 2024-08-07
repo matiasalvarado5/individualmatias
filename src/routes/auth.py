@@ -9,10 +9,17 @@ auth = Blueprint('auth', __name__, url_prefix='/auth')
 def register():
     error = None
     if request.method == 'POST':
-        name = request.form["name"]
-        surname = request.form["surname"]
-        username = request.form["username"]
-        password = request.form["password"]
+        if request.is_json:
+            data = request.get_json()
+            name = data.get("name")
+            surname = data.get("surname")
+            username = data.get("username")
+            password = data.get("password")
+        else:
+            name = request.form["name"]
+            surname = request.form["surname"]
+            username = request.form["username"]
+            password = request.form["password"]
 
         if not name:
             error = 'Se requiere completar el campo Nombre'
@@ -25,9 +32,11 @@ def register():
         else:
             if select_user(username) is None:
                 register_user(name, surname, username, password)
+                print("Usario registrado correctamente")
                 return redirect(url_for("home.homef"))
             else:
                 flash("El usuario ya está registrado. Por favor, elige otro nombre de usuario.", 'error')
+                print("El usuario ya esta registrado")
                 return render_template("auth/register.html", error=error)
             
     return render_template("auth/register.html", error=error)
@@ -38,8 +47,13 @@ def register():
 def login():
     error = None
     if request.method == 'POST':
-        username = request.form["username"]
-        password = request.form["password"]
+        if request.is_json:
+            data = request.get_json()
+            username = data.get("username")
+            password = data.get("password")
+        else:
+            username = request.form["username"]
+            password = request.form["password"]
 
         if not username:
             error = 'Se requiere completar el campo Nombre de usuario'
@@ -48,12 +62,15 @@ def login():
         else:
             user_exist = select_user(username)
 
-            if user_exist is None or not verify_password(user_exist[4], password):
-                flash("Usuario y/o contraseña incorrecta.", 'error')
+
+            if user_exist is None or not verify_password(password,user_exist.password):
+                flash("Usuario y/o contraseña incorrecta.")
+                print("Usuario y/o contraseña incorrecta")
                 return render_template("auth/login.html", error=error)
             else:
                 session.clear()
-                session['user_id'] = user_exist[0]
+                session['user_id'] = user_exist.id
+                print("Inicio de sesion correcto")
                 return redirect(url_for("home.homef"))
                           
     return render_template("auth/login.html", error=error)

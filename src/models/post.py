@@ -1,8 +1,12 @@
-class Post:
 
-    def __init__(self,id,author,title,body,date):
-        self.id = id
-        self.author = author
-        self.title = title
-        self.body = body
-        self.date = date
+from sqlalchemy import Column, Integer, String
+from src.database.connection import Base
+
+class Post(Base):
+    __tablename__ = 'posts'
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    author = Column(String(25))
+    title = Column(String(25))
+    body = Column(String(50))
+    date = Column(String(60))
+

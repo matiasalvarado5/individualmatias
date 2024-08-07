@@ -1,28 +1,26 @@
-import mysql.connector
-from src.database.db_config import MYSQL_CONFIG
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import os
+from sqlalchemy.ext.declarative import declarative_base
 
+Base = declarative_base()
 
 def get_server_connection():
-    config = MYSQL_CONFIG.copy()
-    config.pop('database')
-
     try:
-        server = mysql.connector.connect(**config)
-        print("Conexion con el servidor exitosa")
-        return server
-        
-    except mysql.connector.Error as Err:
-        print("Error en la conexion con el servidor")
-
+        # Conectar al servidor de PostgreSQL
+        engine = create_engine(f'postgresql+psycopg2://{os.environ.get("database_user")}:{os.environ.get("database_password")}@localhost/')
+        return engine
+    except Exception as e:
+        print(f"Error al conectar al servidor: {e}")
+        return None
 
 def get_db_connection():
     try:
-        db = mysql.connector.connect(**MYSQL_CONFIG)
-        cursor = db.cursor() 
-        print("Conexion exitosa con la base de datos")
-        return db
-
-    except mysql.connector.Error as Err:
-        print("La base de datos no existe")
-
-
+        # Conectar a la base de datos específica
+        engine = create_engine(f'postgresql+psycopg2://{os.environ.get("database_user")}:{os.environ.get("database_password")}@localhost/utn_project_db')
+        Session = sessionmaker(bind=engine)
+        session = Session()
+        return session, engine
+    except Exception as e:
+        print(f"Error al conectar a la base de datos: {e}")
+        return None
