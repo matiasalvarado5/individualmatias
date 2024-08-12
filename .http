@@ -1,57 +1,69 @@
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmcmVzaCI6ZmFsc2UsImlhdCI6MTcyMzAzMzYyNCwianRpIjoiZDY4NjZhZmEtYzMxMy00ZjdjLWFlNjItMjA4MWQ0ZDY4ZmY5IiwidHlwZSI6ImFjY2VzcyIsInN1YiI6eyJpZCI6MSwicm9sZSI6IkFETUlOSVNUUkFET1IifSwibmJmIjoxNzIzMDMzNjI0LCJjc3JmIjoiODhmMzFhODctZjkyZS00MmU4LTlmMjAtZjE3ZDRkNTM4Yjg0IiwiZXhwIjoxNzIzMDM0NTI0fQ.Vl3CLl9ZCxGvHw2yH_-YFVR0OEo6GM0lTdnVVS9Wpcc
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..Vl3CLl9ZCxGvHw2yH_-YFVR0OEo6GM0lTdnVVS9Wpcc
 
-#AUTH BP
+### GET REGISTER 
 
-###register
+GET http://localhost:5000/auth/register
+Content-Type: application/json
+
+### REGISTER USER
 POST http://localhost:5000/auth/register
 Content-Type: application/json
 
 {
-  "name" : "usuario",
-  "surname": "ejemplo",
-  "username":"usuariodeejemplo",
+  "name" : "mati",
+  "surname": "alvarado",
+  "username":"matialvarado",
   "password":"password"
 }
 
-###login
+### REGISTER ADMIN
+POST http://localhost:5000/auth/register
+Content-Type: application/json
+
+{
+  "name" : "admin",
+  "surname": "ejemplo",
+  "username":"adminejemplo",
+  "password":"password",
+  "id_rol":1
+}
+
+### LOGIN USER
 POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-  "username" : "usuariodeejemplo",
+  "username" : "usuarioejemplo",
   "password": "password"
 }
 
-#USERS BP
-
-###create user
-POST http://localhost:5000/users
-Authorization: Bearer {{token}}
+### LOGIN ADMIN
+POST http://localhost:5000/auth/login
 Content-Type: application/json
 
 {
-  "email": "user@test.com",
-  "password": "user"
+  "username" : "adminejemplo",
+  "password": "password"
 }
 
-###get all users
-GET http://localhost:5000/users
+### GET ALL USERS
+GET http://localhost:5000/home/users
 Authorization: Bearer {{token}}
 
 
 
-###get user by id
-GET http://localhost:5000/users/4
+### GET USERS BY ID
+GET http://localhost:5000/home/users/1
 Authorization: Bearer {{token}}
 
-###update user
-PUT http://localhost:5000/users/4
+
+### UPDATE USER
+PUT http://localhost:5000/home/users/1
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "email": "new_emails@test.com",
-  "first_name": "test"
+  "name":"Usuarioejemplo22"
 }
 
 ###delete user

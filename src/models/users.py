@@ -8,4 +8,5 @@ class User(Base):
     surname = Column(String(25))
     username = Column(String(25), unique=True)
     password = Column(String(300))
+    id_rol = Column(Integer,default=2)
 

@@ -1,6 +1,7 @@
 class Config:
     DEBUG = True
     TESTING = True
+    SECRET_KEY = 'dev'
 
 class ProductionConfig(Config):
     DEBUG = False
@@ -8,4 +9,3 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
     DEBUG = True
     TESTING = True
-    SECRET_KEY = "dev"
