@@ -79,7 +79,7 @@ def login():
                         'sub': username,
                         'role': user_exist.id_rol,
                         'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=0.25)  # Token válido por 1 hora}
-                    },config['SECRET_KEY'], algorithm="HS256")
+                    },current_app.config['SECRET_KEY'], algorithm="HS256")
                     print("Inicio de sesion de admin")
                     return jsonify({"message":"Bienvenido admin","id":user_exist.id,"name":user_exist.name,"surname":user_exist.surname,"username":user_exist.username,"id_rol":user_exist.id_rol,"token":token})
                 elif user_exist.id_rol == 2:
