@@ -2,7 +2,6 @@ from flask import render_template, Blueprint, flash, g, redirect, request, url_f
 from src.services.UserServices import register_user, select_user, get_user_by_id, verify_password,logged_user,login_required_user,logout_user
 import functools
 import jwt
-from src import app
 import datetime
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
@@ -44,7 +43,6 @@ def register():
                 return jsonify({"message":"El nombre de usuario ya se encuentra registrado","name":name, "surname":surname, "username":username})
             
     return "Pagina de registro"
-
 
 # User login
 @auth.route('/login', methods=['GET', 'POST'])
