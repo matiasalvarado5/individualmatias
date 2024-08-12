@@ -1,5 +1,5 @@
 from flask import render_template, Blueprint, flash, g, redirect, request, url_for, session, jsonify, current_app
-from src.services.UserServices import register_user, select_user, get_user_by_id, verify_password,logged_user,login_required_user,logout_user
+from app.services.UserServices import register_user, select_user, get_user_by_id, verify_password,logged_user,login_required_user,logout_user
 import functools
 import jwt
 import datetime
