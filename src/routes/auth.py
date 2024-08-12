@@ -1,8 +1,10 @@
-from flask import render_template, Blueprint, flash, g, redirect, request, url_for, session, jsonify
+from flask import render_template, Blueprint, flash, g, redirect, request, url_for, session, jsonify, current_app
 from src.services.UserServices import register_user, select_user, get_user_by_id, verify_password,logged_user,login_required_user,logout_user
 import functools
 import jwt
 import datetime
+
+
 
 auth = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -77,7 +79,7 @@ def login():
                         'sub': username,
                         'role': user_exist.id_rol,
                         'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=0.25)  # Token válido por 1 hora}
-                    },app.config['SECRET_KEY'], algorithm="HS256")
+                    },config['SECRET_KEY'], algorithm="HS256")
                     print("Inicio de sesion de admin")
                     return jsonify({"message":"Bienvenido admin","id":user_exist.id,"name":user_exist.name,"surname":user_exist.surname,"username":user_exist.username,"id_rol":user_exist.id_rol,"token":token})
                 elif user_exist.id_rol == 2:
@@ -87,7 +89,7 @@ def login():
                         'sub': username,
                         'role':user_exist.id_rol,
                         'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=0.25)  # Token válido por 1 hora}
-                    },app.config['SECRET_KEY'], algorithm="HS256")
+                    },current_app.config['SECRET_KEY'], algorithm="HS256")
                     print("Inicio de sesion de admin")
                     print("Inicio de sesion usuario")
                     return jsonify({"message":"Bienvenido usuario","id":user_exist.id,"name":user_exist.name,"surname":user_exist.surname,"username":user_exist.username,"token":token})

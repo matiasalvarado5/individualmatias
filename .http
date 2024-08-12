@@ -10,9 +10,9 @@ POST http://localhost:5000/auth/register
 Content-Type: application/json
 
 {
-  "name" : "mati",
-  "surname": "alvarado",
-  "username":"matialvarado",
+  "name" : "juani",
+  "surname": "delosrios",
+  "username":"juani",
   "password":"password"
 }
 
