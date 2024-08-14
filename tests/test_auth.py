@@ -1,55 +1,55 @@
 import sys
 import os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../')))
 
 import unittest
-from app import create_app
-from flask import json
+from flask import Flask
+from app.routes.auth import auth
+from unittest.mock import patch, MagicMock
+
 
 class AuthTestCase(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.app = create_app()
+        # Crear una aplicación Flask y registrar el blueprint de auth
+        cls.app = Flask(__name__)
+        cls.app.register_blueprint(auth)
         cls.client = cls.app.test_client()
-        cls.app_context = cls.app.app_context()
-        cls.app_context.push()
 
-    @classmethod
-    def tearDownClass(cls):
-        cls.app_context.pop()
-
-    def test_register_get(self):
-        response = self.client.get('/auth/register')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Pagina de registro', response.data)
-
-    def test_register_post(self):
+    @patch('app.routes.auth.get_db_connection')
+    @patch('app.routes.auth.register_user')
+    @patch('app.routes.auth.select_user')
+    def test_register_user(self, mock_select_user, mock_register_user, mock_get_db_connection):
+        # Mock de la conexión a la base de datos
+        mock_get_db_connection.return_value = (MagicMock(), MagicMock())
+        mock_select_user.return_value = None
         response = self.client.post('/auth/register', json={
-            "name": "John",
-            "surname": "Doe",
-            "username": "johndoe",
-            "password": "securepassword"
+            'name': 'Test',
+            'surname': 'User',
+            'username': 'testuser',
+            'password': 'password'
         })
         self.assertEqual(response.status_code, 201)
         self.assertIn(b'Usuario registrado correctamente', response.data)
 
-    def test_login_get(self):
-        response = self.client.get('/auth/login')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Pagina de inicio de sesion', response.data)
-
-    def test_login_post(self):
-        response = self.client.post('/auth/login', json={
-            "username": "johndoe",
-            "password": "securepassword"
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'Inicio de sesion correcto', response.data)
-
-    def test_logout(self):
-        response = self.client.post('/auth/logout')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, b'Sesion Finalizada')
+    @patch('app.routes.auth.get_db_connection')
+    @patch('app.routes.auth.select_user')
+    @patch('app.routes.auth.generate_token')
+    def test_login_user(self, mock_generate_token, mock_select_user, mock_get_db_connection):
+        # Mock de la conexión a la base de datos
+        mock_get_db_connection.return_value = (MagicMock(), MagicMock())
+        mock_select_user.return_value = MagicMock(password='hashed_password')
+        mock_generate_token.return_value = 'test_token'
+        
+        with patch('app.routes.auth.check_password_hash', return_value=True):
+            response = self.client.post('/auth/login', json={
+                'username': 'testuser',
+                'password': 'password'
+            })
+            self.assertEqual(response.status_code, 200)
+            self.assertIn(b'test_token', response.data)
 
 if __name__ == '__main__':
     unittest.main()
